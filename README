@@ -20,14 +20,14 @@ Screenchot:
 Installation:
 ------------
 
-- To install topchrono, go inside the unzipped folder and launch the following script in sudo mode:
+- To install prepohra, go inside the unzipped folder and launch the following script in sudo mode:
 
 install.sh
 
 Uninstallation:
 --------------
 
-- To uninstall topchrono, go inside the unzipped folder and launch the following script in sudo mode:
+- To uninstall prepohra, go inside the unzipped folder and launch the following script in sudo mode:
 
 uninstall.sh
 
