@@ -1,0 +1,404 @@
+#!/bin/bash
+
+scoreFile=$HOME/.prepohra.scr
+maxNbScores=10
+
+clear
+
+trap "stty sane;stty sane; setterm -cursor on;exit 1" SIGTERM SIGINT
+stty -echo -icanon time 0 min 0
+setterm -cursor off
+
+up="`echo -e '\e[A'`"
+down="`echo -e '\e[B'`"
+return="`echo -e '\n'`"
+
+i=1
+position=1
+
+refreshTime="0.001"
+
+while [ 1 ]; do
+  
+	sleep $refreshTime
+# 	clear
+	
+	newNbColumns=$(tput cols)
+	
+	if [ "$newNbColumns" != "$nbColumns" ]; then
+		
+		clear
+		
+	fi
+	
+	nbColumns="$newNbColumns"
+	
+	tput cup 0 $(((nbColumns-10)/2))
+	echo -e "\e[93mWelcome to\e[0m"
+	
+	tput cup 3 $(((nbColumns-12)/2))
+	echo -e "\e[32m\e[1mPrepo-Hra :D\e[0m"
+	
+	if [ "$i" -le "100" ]; then
+		
+		text="\e[32m#-#-#-#-#-#-\e[0m"
+		
+	
+	else
+		
+		text="\e[32m-#-#-#-#-#-#\e[0m"
+		
+	fi
+	
+	tput cup 2 $(((nbColumns - 12)/2))
+	echo -e "$text"
+	tput cup 4 $(((nbColumns - 12)/2))
+	echo -e "$text"
+	
+	((i+=1))
+	
+	if [ "$i" -gt "200" ]; then
+		
+		i=1
+		
+	fi
+	
+	tput cup 6 $(((nbColumns - 6)/2))
+	echo -e "\e[94mStart!\e[0m"
+	
+	tput cup 7 $(((nbColumns - 6)/2))
+	echo -e "\e[94mScores\e[0m"
+	
+	tput cup 8 $(((nbColumns - 6)/2))
+	echo -e "\e[94mHelp\e[0m"
+	
+	tput cup 9 $(((nbColumns - 6)/2))
+	echo -e "\e[94mQuit\e[0m"
+	
+	tput cup $((position+5)) $(((nbColumns - 8)/2-3))
+	echo -e "->"
+	
+	read key
+	
+	if [ $? -eq 0 ] && [ -z "$key" ]; then
+		
+		case "$position" in
+		
+		"1")
+			
+			clear
+			
+			echo """
+        
+         ____
+        | __ |
+        |/  \|
+        |\__/|
+        |/  \|
+        |\__/|
+        |/  \|
+        |\__/|
+        |____|
+"""
+			
+			tput cup 4 10
+			echo -e "\e[91m##\e[0m"
+			tput cup 5 10
+			echo -e "\e[91m##\e[0m"
+			
+			sleep 1
+			
+			tput cup 6 10
+			echo -e "\e[93m##\e[0m"
+			tput cup 7 10
+			echo -e "\e[93m##\e[0m"
+			
+			sleep 1
+			
+			tput cup 8 10
+			echo -e "\e[92m##\e[0m"
+			tput cup 9 10
+			echo -e "\e[92m##\e[0m"
+			tput cup 9 18
+			echo -e "\e[92mGO!\e[0m"
+			
+			sleep 1.5
+			
+			timeInit="$(date +%s%N)"
+			
+			stty sane
+			
+			tput cup 12 0
+			
+			penalty=1
+			score=0
+			errors=""
+			
+			while [ "$score" -gt "-20" -a "$score" -lt "10" ]; do
+				
+				prepositionLine=$(shuf -n 1 prepozice)
+				preposition=$(echo "$prepositionLine" | cut -f1)
+				kdoco=$(echo "$prepositionLine" | cut -f4)
+				caseNumber=$(echo "$prepositionLine" | cut -f2)
+				
+				echo -n " $preposition ?"
+				read -sn 1 answer
+				
+				if [ "$answer" == "$caseNumber" ]; then
+					
+					((score+=2))
+					echo -e "\t\t\e[92myes!  \e[94m+2  \e[93m$score \e[0m\t\t'$preposition $kdoco!'"
+					penalty=1
+					
+				
+				else
+					((score-=penalty))
+					echo -e "\t\t\\e[91mnooo!  \e[34m-$penalty  \e[93m$score \e[0m"
+					((penalty+=1))
+					
+					errors="$errors\n $preposition\t$kdoco!\t($caseNumber)"
+					
+				
+				fi
+			done
+			
+			if [ "$score" -ge "10" ]; then
+				
+				stty -echo -icanon time 0 min 0
+				
+				time="$(($(date +%s%N)-$timeInit))"
+				
+				centiseconds="$(($time/10000000%10))"
+				deciseconds="$(($time/100000000%10))"
+				seconds="$(($time/1000000000%10))"
+				decaseconds="$(($time/10000000000%6))"
+				minutes="$(($time/60000000000%10))"
+				decaminutes="$(($time/600000000000%6))"
+				hours="$(($time/3600000000000%10))"
+				decahours="$(($time/36000000000000))"
+				
+				date="$decaminutes$minutes min $decaseconds$seconds sec $deciseconds$centiseconds"
+				
+				newScores="$(cut -f1 $scoreFile; echo $date)"
+				
+				clear
+				
+				echo -e """
+
+        
+         _______________________
+        |_|#|_|#|_|#|_|#|_|#|_|#|
+        |#|_|#|_|#|_|#|_|#|_|#|_|
+        |_|#|_|#|_|#|_|#|_|#|_|#|
+        |#|_|#|_|#|_|#|_|#|_|#|_|
+        |_|#|_|#|_|#|_|#|_|#|_|#|
+        |#|_|#|_|#|_|#|_|#|_|#|_|
+        ||
+        ||
+        ||     \e[92mFINISHED ! :D\e[0m
+        ||
+        ||
+        ||
+        ||
+        ||
+	"""
+				sleep 1
+				
+				tput cup 14 19
+				echo "time:"
+				
+				sleep 1
+				
+				tput cup 15 14
+				echo -e "\e[96m$date\e[0m"
+				
+				sleep 1
+				
+				errors="$(echo -e "$errors" | sort -u)"
+				
+				tput cup 19 0
+				echo -e "To review:\n$errors"
+				
+				stty sane
+				read
+				stty -echo -icanon time 0 min 0
+				
+				if [ "$(echo "$newScores" | sort | tail -1)" != "$date" -o "$(echo "$newScores" | wc -l)" -le "5" ]; then
+					
+					clear
+					
+					echo -e """\e[33m
+
+         CONGRATULATION!
+          
+                  \e[93m*\e[33m           
+      /  \=======\e[93m***\e[33m=/  \     
+     /    |\e[93m|\e[33m      \e[93m*\e[33m |    \    
+     |    |\e[93m|\e[33m        |    |    
+     |    |\e[93m|\e[33m        |    |   
+     \    \\\\\e[93m\\\\\e[33m--------/    /    
+      \__/ \\\\\e[93m\\\\\e[33m      / \__/    
+            \\\\\e[93m\\\\\e[33m----/         
+             |\e[93m|\e[33m  |          
+             |\e[93m|\e[33m  |          
+            _|\e[93m|\e[33m__|_          
+           |\e[93m|\e[33m______|  
+\e[0m"""
+					
+					echo -e "\n You are in the high scores!\n\n Please, enter your name! :)"
+					read -t 1 -n 10000 discard 
+					stty sane; setterm -cursor on
+					echo -e "\e[93m"
+					read name
+					echo -e "\e[0m"
+					stty -echo -icanon time 0 min 0; setterm -cursor off
+					
+					echo -e "\n$date\t$name\t$(date)" >> $scoreFile
+					
+					sort -u $scoreFile | sed "/^[ \t]*$/d" | head -$maxNbScores > $scoreFile.tmp
+					
+					mv $scoreFile.tmp $scoreFile
+					
+				fi
+				
+				clear
+			
+			else
+				
+				stty -echo -icanon time 0 min 0
+				
+				clear
+				
+				echo -e "\n   \e[91mYou crashed! :(\e[0m"
+				
+				sleep 1
+				
+				errors="$(echo -e "$errors" | sort -u)"
+				
+				echo -e "\nTo review:\n$errors"
+				
+				stty sane
+				read
+				stty -echo -icanon time 0 min 0
+				
+				clear
+				
+			fi
+			
+			;;
+		
+		"2")
+			
+			clear
+			
+			stty sane
+			
+			echo -e "\nHight Scores:\n============"
+			
+			echo -e "\e[93m"
+			awk '{printf "%d\t%s\n", NR, $0}' $scoreFile
+			echo -e "\e[0m"
+			
+			echo -e "\e[2mPress [Return] to quit this page.\e[0m"
+			
+			read
+			
+			stty -echo -icanon time 0 min 0
+			
+			clear
+			
+			;;
+		
+		"3")
+			
+			clear
+			
+			stty sane
+			
+			echo -e """
+Prepo-Hra Help:
+==============
+
+Aim:
+---
+
+The aim of Prepro-Hra is to find in a minimum time the cases associated with Czech prepositions.
+
+Rules:
+-----
+
+Each time the gamer gives a right answer, he or she gains 2 points.
+Each time the gamer gives a wrong answer, he or she loses first 1 points, then 2 points, and so on.
+
+When the score reaches 10 points, the game is finished and the total time is displayed.
+When the score reaches -20 points, the game is over.
+
+Work:
+----
+
+When a preposition is shown to the gamer, he or she has to hit the key corresponding to the suitable case: [2] for dative, [3] for genitive, and so on.
+
+If the gamer hits another key, the answer is considered wrong.
+
+\e[2mPress [Return] to quit this page.\e[0m
+
+"""
+			read
+			
+			stty -echo -icanon time 0 min 0
+			
+			clear
+			
+			;;
+			
+		
+		"4")
+			
+			clear
+			
+			tput cup 2 $(((nbColumns - 25)/2))
+			echo -e "\e[95mThank you for playing! :)\e[0m"
+			
+			sleep 1
+			
+			clear
+			
+			stty sane; setterm -cursor on
+			
+			exit 0
+			
+			;;
+		
+		esac
+	fi
+	
+	case "$key" in
+	
+	"$up")
+		
+		tput cup $((position+5)) $(((nbColumns - 8)/2-3))
+		echo -e "  "
+		
+		((position-=1))
+		if [ "$position" -lt "1" ]; then position=4; fi
+		;;
+		
+	
+	"$down")
+		
+		tput cup $((position+5)) $(((nbColumns - 8)/2-3))
+		echo -e "  "
+		
+		((position+=1))
+		if [ "$position" -gt "4" ]; then position=1; fi
+		;;
+		
+	esac
+	
+done
+
+clear
+
+stty sane; setterm -cursor on
+
+exit 0
