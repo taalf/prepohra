@@ -1,4 +1,34 @@
-prepohra
+Pepo-Hra
 ========
 
-Bash game to learn Czech preposition cases
+Prepo-hra is a funny little game in bash language to learn Czech preposition cases.
+
+Screenchot:
+----------
+
+           Welcome to
+
+          #-#-#-#-#-#-
+          Prepo-Hra :D
+          #-#-#-#-#-#-
+
+         ->  Start!
+             Scores
+             Help
+             Quit
+
+Installation:
+------------
+
+- To install topchrono, go inside the unzipped folder and launch the following script in sudo mode:
+
+install.sh
+
+Uninstallation:
+--------------
+
+- To uninstall topchrono, go inside the unzipped folder and launch the following script in sudo mode:
+
+uninstall.sh
+
+Enjoy!
