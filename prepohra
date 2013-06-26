@@ -19,7 +19,7 @@ position=1
 refreshTime="0.001"
 
 while [ 1 ]; do
-  
+	
 	sleep $refreshTime
 # 	clear
 	
@@ -33,10 +33,10 @@ while [ 1 ]; do
 	
 	nbColumns="$newNbColumns"
 	
-	tput cup 0 $(((nbColumns-10)/2))
+	tput cup 1 $(((nbColumns-10)/2))
 	echo -e "\e[93mWelcome to\e[0m"
 	
-	tput cup 3 $(((nbColumns-12)/2))
+	tput cup 4 $(((nbColumns-12)/2))
 	echo -e "\e[32m\e[1mPrepo-Hra :D\e[0m"
 	
 	if [ "$i" -le "100" ]; then
@@ -50,9 +50,9 @@ while [ 1 ]; do
 		
 	fi
 	
-	tput cup 2 $(((nbColumns - 12)/2))
+	tput cup 3 $(((nbColumns - 12)/2))
 	echo -e "$text"
-	tput cup 4 $(((nbColumns - 12)/2))
+	tput cup 5 $(((nbColumns - 12)/2))
 	echo -e "$text"
 	
 	((i+=1))
@@ -63,19 +63,19 @@ while [ 1 ]; do
 		
 	fi
 	
-	tput cup 6 $(((nbColumns - 6)/2))
+	tput cup 7 $(((nbColumns - 6)/2))
 	echo -e "\e[94mStart!\e[0m"
 	
-	tput cup 7 $(((nbColumns - 6)/2))
+	tput cup 8 $(((nbColumns - 6)/2))
 	echo -e "\e[94mScores\e[0m"
 	
-	tput cup 8 $(((nbColumns - 6)/2))
+	tput cup 9 $(((nbColumns - 6)/2))
 	echo -e "\e[94mHelp\e[0m"
 	
-	tput cup 9 $(((nbColumns - 6)/2))
+	tput cup 10 $(((nbColumns - 6)/2))
 	echo -e "\e[94mQuit\e[0m"
 	
-	tput cup $((position+5)) $(((nbColumns - 8)/2-3))
+	tput cup $((position+6)) $(((nbColumns - 8)/2-3))
 	echo -e "->"
 	
 	read key
@@ -376,7 +376,7 @@ If the gamer hits another key, the answer is considered wrong.
 	
 	"$up")
 		
-		tput cup $((position+5)) $(((nbColumns - 8)/2-3))
+		tput cup $((position+6)) $(((nbColumns - 8)/2-3))
 		echo -e "  "
 		
 		((position-=1))
@@ -386,7 +386,7 @@ If the gamer hits another key, the answer is considered wrong.
 	
 	"$down")
 		
-		tput cup $((position+5)) $(((nbColumns - 8)/2-3))
+		tput cup $((position+6)) $(((nbColumns - 8)/2-3))
 		echo -e "  "
 		
 		((position+=1))
