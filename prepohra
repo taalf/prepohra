@@ -1,40 +1,116 @@
 #!/bin/bash
 
+maxScore=10
+minScore=-20
+
+refreshTime="0.001"
+
 scoreFile=$HOME/.prepohra.scr
+
 maxNbScores=10
 
-clear
-
-trap "stty sane;stty sane; setterm -cursor on;exit 1" SIGTERM SIGINT
-stty -echo -icanon time 0 min 0
-setterm -cursor off
+prepositions="""mezi (čin)	4	akuzitav	koho co
+mimo	4	akuzitav	koho co
+na (čin)	4	akuzitav	koho co
+nad (čin)	4	akuzitav	koho co
+pod (čin)	4	akuzitav	koho co
+přes	4	akuzitav	koho co
+za (čin)	4	akuzitav	koho co
+na (čas)	4	akuzitav	koho co
+ve (čas)	4	akuzitav	koho co
+za (čas:budoucnost)	4	akuzitav	koho co
+pro	4	akuzitav	koho co
+do (čin)	3	genitiv	koho čeho
+od (čin)	3	genitiv	koho čeho
+ze	3	genitiv	koho čeho
+kolem (stav)	3	genitiv	koho čeho
+okolo	3	genitiv	koho čeho
+podél	3	genitiv	koho čeho
+u	3	genitiv	koho čeho
+uprostřed	3	genitiv	koho čeho
+uvnitř	3	genitiv	koho čeho
+během	3	genitiv	koho čeho
+do (čas)	3	genitiv	koho čeho
+kolem (čas)	3	genitiv	koho čeho
+od (čas)	3	genitiv	koho čeho
+za (čas:během)	3	genitiv	koho čeho
+bez	3	genitiv	koho čeho
+kromě	3	genitiv	koho čeho
+místo	3	genitiv	koho čeho
+podle	3	genitiv	koho čeho
+ke	2	datif	komu čemu
+naproti	2	datif	komu čemu
+díky	2	datif	komu čemu
+kvůli	2	datif	komu čemu
+proti	2	datif	komu čemu
+na (stav)	6	lokál	kom čem
+po (stav)	6	lokál	kom čem
+ve (stav)	6	lokál	kom čem
+o (čas)	6	lokál	kom čem
+po (čas)	6	lokál	kom čem
+při	6	lokál	kom čem
+o (mluv)	6	lokál	kom čem
+mezi (stav)	7	instrumentál	kým čím
+nad (stav)	7	instrumentál	kým čím
+pod (stav)	7	instrumentál	kým čím
+před	7	instrumentál	kým čím
+za (stav)	7	instrumentál	kým čím
+před	7	instrumentál	kým čím
+se	7	instrumentál	kým čím"""
 
 up="`echo -e '\e[A'`"
 down="`echo -e '\e[B'`"
 return="`echo -e '\n'`"
 
+#############################################################################
+
+# Clear the display
+
+echo -ne "\0033\0143"; setterm -cursor off
+
+#-
+
+# Change terminal behavior
+
+trap "stty sane;stty sane; setterm -cursor on;exit 1" SIGTERM SIGINT # Clear changes if [Ctrl]+[C]
+
+stty -echo -icanon time 0 min 0 # Don't wait when read user input
+
+#-
+
 i=1
 position=1
 
-refreshTime="0.001"
-
-while [ 1 ]; do
+while [ 1 ]; do # Until the end...
+	
+	# Wait a bit
 	
 	sleep $refreshTime
-# 	clear
+	
+	#-
+	
+	# Clear the display if window resized
 	
 	newNbColumns=$(tput cols)
 	
 	if [ "$newNbColumns" != "$nbColumns" ]; then
 		
-		clear
+		echo -ne "\0033\0143"; setterm -cursor off
 		
 	fi
 	
 	nbColumns="$newNbColumns"
 	
+	#-
+	
+	# Display heading
+	
 	tput cup 1 $(((nbColumns-10)/2))
 	echo -e "\e[93mWelcome to\e[0m"
+	
+	#-
+	
+	# Display title
 	
 	tput cup 4 $(((nbColumns-12)/2))
 	echo -e "\e[32m\e[1mPrepo-Hra :D\e[0m"
@@ -63,30 +139,47 @@ while [ 1 ]; do
 		
 	fi
 	
+	#-
+	
+	# Display menu
+	
 	tput cup 7 $(((nbColumns - 6)/2))
 	echo -e "\e[94mStart!\e[0m"
-	
 	tput cup 8 $(((nbColumns - 6)/2))
 	echo -e "\e[94mScores\e[0m"
-	
 	tput cup 9 $(((nbColumns - 6)/2))
 	echo -e "\e[94mHelp\e[0m"
-	
 	tput cup 10 $(((nbColumns - 6)/2))
 	echo -e "\e[94mQuit\e[0m"
+	
+	#-
+	
+	# Display cursor
 	
 	tput cup $((position+6)) $(((nbColumns - 8)/2-3))
 	echo -e "->"
 	
+	#-
+	
+	# Read the hit key
+	
 	read key
 	
-	if [ $? -eq 0 ] && [ -z "$key" ]; then
+	#-
+	
+	if [ $? -eq 0 ] && [ -z "$key" ]; then # If [Return] hit...
+		
+		# Clear the display
+		
+		echo -ne "\0033\0143"; setterm -cursor off
+		
+		#-
 		
 		case "$position" in
 		
-		"1")
+		"1") # If "Start" is selected...
 			
-			clear
+			# Display the traffic lights
 			
 			echo """
         
@@ -122,49 +215,119 @@ while [ 1 ]; do
 			tput cup 9 18
 			echo -e "\e[92mGO!\e[0m"
 			
-			sleep 1.5
+			#-
+			
+			# Clear the input buffer
+			
+			read -t 1 -n 10000 discard
+			
+			#-
+			
+			# Save the initial time
 			
 			timeInit="$(date +%s%N)"
 			
-			stty sane
+			#-
 			
-			tput cup 12 0
+			# Initialize game data
 			
 			penalty=1
 			score=0
-			errors=""
+			mistakes=""
 			
-			while [ "$score" -gt "-20" -a "$score" -lt "10" ]; do
+			#-
+			
+			# Always wait for the user input from now
+			
+			stty sane
+			
+			#-
+			
+			tput cup 12 0
+			
+			while [ "$score" -gt "$minScore" -a "$score" -lt "$maxScore" ]; do # Until the end of the game...
 				
-				prepositionLine=$(shuf -n 1 prepozice)
+				# Get a random preposition and its case
+				
+				prepositionLine=$(echo "$prepositions" | shuf -n 1)
 				preposition=$(echo "$prepositionLine" | cut -f1)
 				kdoco=$(echo "$prepositionLine" | cut -f4)
 				caseNumber=$(echo "$prepositionLine" | cut -f2)
 				
+				#-
+				
+				# Ask the question
+				
 				echo -n " $preposition ?"
 				read -sn 1 answer
 				
-				if [ "$answer" == "$caseNumber" ]; then
+				#-
+				
+				if [ "$answer" == "$caseNumber" ]; then # If the answer it true...
+					
+					# Increade the score
 					
 					((score+=2))
+					
+					#-
+					
+					# Display the score
+					
 					echo -e "\t\t\e[92myes!  \e[94m+2  \e[93m$score \e[0m\t\t'$preposition $kdoco!'"
+					
+					#-
+					
+					# Reset the penalty
+					
 					penalty=1
 					
+					#-
 				
-				else
+				else # If not...
+					
+					# Decrease the score
+					
 					((score-=penalty))
+					
+					#-
+					
+					# Display the score
+					
 					echo -e "\t\t\\e[91mnooo!  \e[34m-$penalty  \e[93m$score \e[0m"
+					
+					#-
+					
+					# Increase the penalty
+					
 					((penalty+=1))
 					
-					errors="$errors\n $preposition\t$kdoco!\t($caseNumber)"
+					#-
+					
+					# Save the preposition to the mistake list
+					
+					mistakes="$mistakes\n $preposition\t$kdoco!\t($caseNumber)"
+					
+					#-
 					
 				
 				fi
 			done
 			
-			if [ "$score" -ge "10" ]; then
+			# Never wait for the user input from now
+			
+			stty -echo -icanon time 0 min 0
+			
+			#-
+			
+			# Clear the display
+			
+			echo -ne "\0033\0143"; setterm -cursor off
+			
+			#-
+			
+			if [ "$score" -ge "$maxScore" ]; then # When the score reaches the maximum...
 				
-				stty -echo -icanon time 0 min 0
+				# Calculate the delta time
 				
 				time="$(($(date +%s%N)-$timeInit))"
 				
@@ -179,9 +342,15 @@ while [ 1 ]; do
 				
 				date="$decaminutes$minutes min $decaseconds$seconds sec $deciseconds$centiseconds"
 				
-				newScores="$(cut -f1 $scoreFile; echo $date)"
+				#-
 				
-				clear
+				# Clear the display
+				
+				echo -ne "\0033\0143"; setterm -cursor off
+				
+				#-
+				
+				# Display the flag with time
 				
 				echo -e """
 
@@ -214,18 +383,40 @@ while [ 1 ]; do
 				
 				sleep 1
 				
-				errors="$(echo -e "$errors" | sort -u)"
+				#-
+				
+				# Display the mistake list
+				
+				mistakes="$(echo -e "$mistakes" | sort -u)"
 				
 				tput cup 19 0
-				echo -e "To review:\n$errors"
+				echo -e " To review:\n$mistakes"
+				
+				#-
+				
+				# Wait the user hits [Return]
 				
 				stty sane
-				read
+				read -s
 				stty -echo -icanon time 0 min 0
 				
-				if [ "$(echo "$newScores" | sort | tail -1)" != "$date" -o "$(echo "$newScores" | wc -l)" -le "5" ]; then
+				#-
+				
+				# Check if the user is in high scores
+				
+				newScores="$(cut -f1 $scoreFile; echo $date)"
+				
+				#...
+				
+				if [ "$(echo "$newScores" | sort | tail -1)" != "$date" -o "$(echo "$newScores" | wc -l)" -le "5" ]; then # If yes...
 					
-					clear
+					# Clear the display
+					
+					echo -ne "\0033\0143"; setterm -cursor off
+					
+					#-
+					
+					# Display the cup
 					
 					echo -e """\e[33m
 
@@ -245,13 +436,34 @@ while [ 1 ]; do
            |\e[93m|\e[33m______|  
 \e[0m"""
 					
-					echo -e "\n You are in the high scores!\n\n Please, enter your name! :)"
-					read -t 1 -n 10000 discard 
+					#-
+					
+					# Clear the input buffer
+					
+					read -t 1 -n 10000 discard
+					
+					#-
+					
+					# Come back to classic behavior
+					
 					stty sane; setterm -cursor on
+					
+					#-
+					
+					# Ask for the user name
+					
+					echo -e "\n You are in the high scores!\n\n Please, enter your name! :)"
+					
 					echo -e "\e[93m"
+					echo -n " "
 					read name
 					echo -e "\e[0m"
-					stty -echo -icanon time 0 min 0; setterm -cursor off
+					
+					stty -echo -icanon time 0 min 0; setterm -cursor off # Come back to game behavior
+					
+					#-
+					
+					# Write the score in the score file
 					
 					echo -e "\n$date\t$name\t$(date)" >> $scoreFile
 					
@@ -259,66 +471,81 @@ while [ 1 ]; do
 					
 					mv $scoreFile.tmp $scoreFile
 					
+					#-
+					
 				fi
 				
-				clear
+				#-
 			
-			else
+			else # If the minimum score is reached...
 				
-				stty -echo -icanon time 0 min 0
-				
-				clear
+				# Display text
 				
 				echo -e "\n   \e[91mYou crashed! :(\e[0m"
 				
 				sleep 1
 				
-				errors="$(echo -e "$errors" | sort -u)"
+				#-
 				
-				echo -e "\nTo review:\n$errors"
+				# Display the mistake list
+				
+				mistakes="$(echo -e "$mistakes" | sort -u)"
+				
+				echo -e "\n To review:\n$mistakes"
+				
+				#-
+				
+				# Wait the user hits [Return]
 				
 				stty sane
-				read
+				read -s
 				stty -echo -icanon time 0 min 0
 				
-				clear
+				#-
 				
 			fi
 			
 			;;
 		
-		"2")
+		"2") # If "Score" is selected...
 			
-			clear
-			
-			stty sane
+			# Display the title
 			
 			echo -e "\nHight Scores:\n============"
+			
+			#-
+			
+			# Display the scores
 			
 			echo -e "\e[93m"
 			awk '{printf "%d\t%s\n", NR, $0}' $scoreFile
 			echo -e "\e[0m"
 			
+			#-
+			
+			# Wait the user hits [Return]
+			
 			echo -e "\e[2mPress [Return] to quit this page.\e[0m"
 			
-			read
-			
+			stty sane
+			read -s
 			stty -echo -icanon time 0 min 0
 			
-			clear
+			#-
 			
 			;;
 		
-		"3")
+		"3") # If "Help" is selected...
 			
-			clear
+			# Display the title
 			
-			stty sane
+			echo -e "\nPrepo-Hra Help:\n=============="
+			
+			#-
+			
+			# Display the text
 			
 			echo -e """
-Prepo-Hra Help:
-==============
-
 Aim:
 ---
 
@@ -340,65 +567,101 @@ When a preposition is shown to the gamer, he or she has to hit the key correspon
 
 If the gamer hits another key, the answer is considered wrong.
 
-\e[2mPress [Return] to quit this page.\e[0m
-
 """
-			read
 			
+			#-
+			
+			# Wait the user hits [Return]
+			
+			echo -e "\e[2mPress [Return] to quit this page.\e[0m"
+			
+			stty sane
+			read -s
 			stty -echo -icanon time 0 min 0
 			
-			clear
+			#-
 			
 			;;
 			
 		
-		"4")
+		"4") # If "Quit" is selected...
 			
-			clear
-			
-			tput cup 2 $(((nbColumns - 25)/2))
-			echo -e "\e[95mThank you for playing! :)\e[0m"
-			
-			sleep 1
-			
-			clear
-			
-			stty sane; setterm -cursor on
-			
-			exit 0
+			break
 			
 			;;
+			
 		
 		esac
+		
+		# Clear the display
+		
+		echo -ne "\0033\0143"; setterm -cursor off
+		
+		#-
+		
 	fi
 	
 	case "$key" in
 	
-	"$up")
+	"$up") # If "Up" is hit...
+		
+		# Delete the cursor
 		
 		tput cup $((position+6)) $(((nbColumns - 8)/2-3))
 		echo -e "  "
 		
+		#-
+		
+		# Update position
+		
 		((position-=1))
+		
 		if [ "$position" -lt "1" ]; then position=4; fi
 		;;
 		
+		#-
+		
 	
-	"$down")
+	"$down") # If "Down" is hit...
+		
+		# Delete the cursor
 		
 		tput cup $((position+6)) $(((nbColumns - 8)/2-3))
 		echo -e "  "
 		
+		#-
+		
+		# Update position
+		
 		((position+=1))
+		
 		if [ "$position" -gt "4" ]; then position=1; fi
 		;;
 		
+		#-
 	esac
 	
 done
 
-clear
+# Display the text
+
+tput cup 2 $(((nbColumns - 25)/2))
+echo -e "\e[95mThank you for playing! :)\e[0m"
+
+sleep 1
+
+#-
+
+# Clear the display
+
+echo -ne "\0033\0143"; setterm -cursor off
+
+#-
+
+# Reset the terminal behavior
 
 stty sane; setterm -cursor on
+
+#-
 
 exit 0
