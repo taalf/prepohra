@@ -53,9 +53,9 @@ o (mluv)	6	lokál	kom čem
 mezi (stav)	7	instrumentál	kým čím
 nad (stav)	7	instrumentál	kým čím
 pod (stav)	7	instrumentál	kým čím
-před	7	instrumentál	kým čím
+před (stav)	7	instrumentál	kým čím
 za (stav)	7	instrumentál	kým čím
-před	7	instrumentál	kým čím
+před (čas)	7	instrumentál	kým čím
 se	7	instrumentál	kým čím"""
 
 up="`echo -e '\e[A'`"
