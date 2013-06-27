@@ -465,7 +465,7 @@ while [ 1 ]; do # Until the end...
 					
 					# Write the score in the score file
 					
-					echo -e "\n$date\t$name\t$(date)" >> $scoreFile
+					echo -e "\n$(date)\t$date\t$name" >> $scoreFile
 					
 					sort -u $scoreFile | sed "/^[ \t]*$/d" | head -$maxNbScores > $scoreFile.tmp
 					
