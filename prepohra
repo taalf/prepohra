@@ -9,7 +9,30 @@ scoreFile=$HOME/.prepohra.scr
 
 maxNbScores=10
 
-prepositions="""mezi (čin)	4	akuzitav	koho co
+prepositions="""do (čin)	2	genitiv	koho čeho
+od (čin)	2	genitiv	koho čeho
+ze	2	genitiv	koho čeho
+kolem (stav)	2	genitiv	koho čeho
+okolo	2	genitiv	koho čeho
+podél	2	genitiv	koho čeho
+u	2	genitiv	koho čeho
+uprostřed	2	genitiv	koho čeho
+uvnitř	2	genitiv	koho čeho
+během	2	genitiv	koho čeho
+do (čas)	2	genitiv	koho čeho
+kolem (čas)	2	genitiv	koho čeho
+od (čas)	2	genitiv	koho čeho
+za (čas:během)	2	genitiv	koho čeho
+bez	2	genitiv	koho čeho
+kromě	2	genitiv	koho čeho
+místo	2	genitiv	koho čeho
+podle	2	genitiv	koho čeho
+ke	3	datif	komu čemu
+naproti	3	datif	komu čemu
+díky	3	datif	komu čemu
+kvůli	3	datif	komu čemu
+proti	3	datif	komu čemu
+mezi (čin)	4	akuzitav	koho co
 mimo	4	akuzitav	koho co
 na (čin)	4	akuzitav	koho co
 nad (čin)	4	akuzitav	koho co
@@ -20,29 +43,6 @@ na (čas)	4	akuzitav	koho co
 ve (čas)	4	akuzitav	koho co
 za (čas:budoucnost)	4	akuzitav	koho co
 pro	4	akuzitav	koho co
-do (čin)	3	genitiv	koho čeho
-od (čin)	3	genitiv	koho čeho
-ze	3	genitiv	koho čeho
-kolem (stav)	3	genitiv	koho čeho
-okolo	3	genitiv	koho čeho
-podél	3	genitiv	koho čeho
-u	3	genitiv	koho čeho
-uprostřed	3	genitiv	koho čeho
-uvnitř	3	genitiv	koho čeho
-během	3	genitiv	koho čeho
-do (čas)	3	genitiv	koho čeho
-kolem (čas)	3	genitiv	koho čeho
-od (čas)	3	genitiv	koho čeho
-za (čas:během)	3	genitiv	koho čeho
-bez	3	genitiv	koho čeho
-kromě	3	genitiv	koho čeho
-místo	3	genitiv	koho čeho
-podle	3	genitiv	koho čeho
-ke	2	datif	komu čemu
-naproti	2	datif	komu čemu
-díky	2	datif	komu čemu
-kvůli	2	datif	komu čemu
-proti	2	datif	komu čemu
 na (stav)	6	lokál	kom čem
 po (stav)	6	lokál	kom čem
 ve (stav)	6	lokál	kom čem
