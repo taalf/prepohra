@@ -404,7 +404,7 @@ while [ 1 ]; do # Until the end...
 				
 				# Check if the user is in high scores
 				
-				newScores="$(cut -f1 $scoreFile; echo $date)"
+				newScores="$(cut -f2 $scoreFile; echo $date)"
 				
 				#...
 				
@@ -467,7 +467,7 @@ while [ 1 ]; do # Until the end...
 					
 					echo -e "\n$(date)\t$date\t$name" >> $scoreFile
 					
-					sort -u $scoreFile | sed "/^[ \t]*$/d" | head -$maxNbScores > $scoreFile.tmp
+					sort -k2 -u $scoreFile | sed "/^[ \t]*$/d" | head -$maxNbScores > $scoreFile.tmp
 					
 					mv $scoreFile.tmp $scoreFile
 					
