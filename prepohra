@@ -32,17 +32,17 @@ naproti	3	datif	komu čemu
 díky	3	datif	komu čemu
 kvůli	3	datif	komu čemu
 proti	3	datif	komu čemu
-mezi (čin)	4	akuzitav	koho co
-mimo	4	akuzitav	koho co
-na (čin)	4	akuzitav	koho co
-nad (čin)	4	akuzitav	koho co
-pod (čin)	4	akuzitav	koho co
-přes	4	akuzitav	koho co
-za (čin)	4	akuzitav	koho co
-na (čas)	4	akuzitav	koho co
-ve (čas)	4	akuzitav	koho co
-za (čas:budoucnost)	4	akuzitav	koho co
-pro	4	akuzitav	koho co
+mezi (čin)	4	akuzativ	koho co
+mimo	4	akuzativ	koho co
+na (čin)	4	akuzativ	koho co
+nad (čin)	4	akuzativ	koho co
+pod (čin)	4	akuzativ	koho co
+přes	4	akuzativ	koho co
+za (čin)	4	akuzativ	koho co
+na (čas)	4	akuzativ	koho co
+ve (čas)	4	akuzativ	koho co
+za (čas:budoucnost)	4	akuzativ	koho co
+pro	4	akuzativ	koho co
 na (stav)	6	lokál	kom čem
 po (stav)	6	lokál	kom čem
 ve (stav)	6	lokál	kom čem
@@ -150,6 +150,8 @@ while [ 1 ]; do # Until the end...
 	tput cup 9 $(((nbColumns - 6)/2))
 	echo -e "\e[94mHelp\e[0m"
 	tput cup 10 $(((nbColumns - 6)/2))
+	echo -e "\e[94mSolution\e[0m"
+	tput cup 11 $(((nbColumns - 6)/2))
 	echo -e "\e[94mQuit\e[0m"
 	
 	#-
@@ -584,7 +586,130 @@ If the gamer hits another key, the answer is considered wrong.
 			;;
 			
 		
-		"4") # If "Quit" is selected...
+		"4") # If "Solution" is selected...
+			
+			# Display the title
+			
+			echo -e "\nGenitive (2):\n============\n"
+			
+			#-
+			
+			# Display the text
+			
+			echo "$prepositions" | grep "genitiv" | cut -f1
+			
+			#-
+			
+			# Wait the user hits [Return]
+			
+			echo -e "\n\e[2mPress [Return] to go to the next page.\e[0m"
+			
+			stty sane
+			read -s
+			stty -echo -icanon time 0 min 0
+			
+			#-
+			
+			clear
+			
+			# Display the title
+			
+			echo -e "\nDative (3):\n==========\n"
+			
+			#-
+			
+			# Display the text
+			
+			echo "$prepositions" | grep "datif" | cut -f1
+			
+			#-
+			
+			# Wait the user hits [Return]
+			
+			echo -e "\n\e[2mPress [Return] to go to the next page.\e[0m"
+			
+			stty sane
+			read -s
+			stty -echo -icanon time 0 min 0
+			
+			#-
+			
+			clear
+			
+			# Display the title
+			
+			echo -e "\nAccusative (4):\n==============\n"
+			
+			#-
+			
+			# Display the text
+			
+			echo "$prepositions" | grep "akuzativ" | cut -f1
+			
+			#-
+			
+			# Wait the user hits [Return]
+			
+			echo -e "\n\e[2mPress [Return] to go to the next page.\e[0m"
+			
+			stty sane
+			read -s
+			stty -echo -icanon time 0 min 0
+			
+			#-
+			
+			clear
+			
+			# Display the title
+			
+			echo -e "\nLocative (6):\n============\n"
+			
+			#-
+			
+			# Display the text
+			
+			echo "$prepositions" | grep "lokál" | cut -f1
+			
+			#-
+			
+			# Wait the user hits [Return]
+			
+			echo -e "\n\e[2mPress [Return] to go to the next page.\e[0m"
+			
+			stty sane
+			read -s
+			stty -echo -icanon time 0 min 0
+			
+			#-
+			
+			clear
+			
+			# Display the title
+			
+			echo -e "\nInstrumental (7):\n================\n"
+			
+			#-
+			
+			# Display the text
+			
+			echo "$prepositions" | grep "instrumentál" | cut -f1
+			
+			#-
+			
+			# Wait the user hits [Return]
+			
+			echo -e "\n\e[2mPress [Return] to quit this page.\e[0m"
+			
+			stty sane
+			read -s
+			stty -echo -icanon time 0 min 0
+			
+			#-
+			
+			;;
+			
+		
+		"5") # If "Quit" is selected...
 			
 			break
 			
@@ -616,7 +741,7 @@ If the gamer hits another key, the answer is considered wrong.
 		
 		((position-=1))
 		
-		if [ "$position" -lt "1" ]; then position=4; fi
+		if [ "$position" -lt "1" ]; then position=5; fi
 		;;
 		
 		#-
@@ -635,7 +760,7 @@ If the gamer hits another key, the answer is considered wrong.
 		
 		((position+=1))
 		
-		if [ "$position" -gt "4" ]; then position=1; fi
+		if [ "$position" -gt "5" ]; then position=1; fi
 		;;
 		
 		#-
